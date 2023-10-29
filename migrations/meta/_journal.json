@@ -8,6 +8,13 @@
       "when": 1698618812745,
       "tag": "0000_simple_cyclops",
       "breakpoints": false
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1698620799045,
+      "tag": "0001_jittery_the_stranger",
+      "breakpoints": false
     }
   ]
 }
