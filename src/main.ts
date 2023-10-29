@@ -1,11 +1,30 @@
 import { buildServer } from "./utils/server";
 
+async function gracefulShutdown({
+  app,
+}: {
+  app: Awaited<ReturnType<typeof buildServer>>;
+}) {
+  await app.close();
+}
+
 async function main() {
   const app = await buildServer();
 
-  app.listen({
+  await app.listen({
     port: 3000,
   });
+
+  const signals = ["SIGINT", "SIGTERM"];
+
+  for (const signal of signals) {
+    process.on(signal, () => {
+      console.log(`Terminating server. Recieved ${signal}`);
+      gracefulShutdown({
+        app,
+      });
+    });
+  }
 }
 
 main();
