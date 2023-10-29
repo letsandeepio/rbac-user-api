@@ -26,10 +26,10 @@ export const users = pgTable(
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("update_at").defaultNow().notNull(),
   },
-  (users) => {
+  (_users) => {
     return {
-      cpk: primaryKey(users.email, users.applicatonId),
-      idIndex: uniqueIndex("users_id_index").on(users.id),
+      cpk: primaryKey(_users.email, _users.applicatonId),
+      idIndex: uniqueIndex("users_id_index").on(_users.id),
     };
   }
 );
@@ -44,10 +44,36 @@ export const roles = pgTable(
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("update_at").defaultNow().notNull(),
   },
-  (roles) => {
+  (_roles) => {
     return {
-      cpk: primaryKey(roles.name, roles.applicatonId),
-      idIndex: uniqueIndex("roles_id_index").on(roles.id),
+      cpk: primaryKey(_roles.name, _roles.applicatonId),
+      idIndex: uniqueIndex("roles_id_index").on(_roles.id),
+    };
+  }
+);
+
+export const userToRoles = pgTable(
+  "userToRoles",
+  {
+    applicatonId: uuid("applicationId")
+      .references(() => applicaton.id)
+      .notNull(),
+
+    roleId: uuid("roleId")
+      .references(() => roles.id)
+      .notNull(),
+
+    userId: uuid("userId")
+      .references(() => users.id)
+      .notNull(),
+  },
+  (_userToRoles) => {
+    return {
+      cpk: primaryKey(
+        _userToRoles.applicatonId,
+        _userToRoles.roleId,
+        _userToRoles.userId
+      ),
     };
   }
 );
