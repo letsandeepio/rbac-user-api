@@ -1,6 +1,7 @@
 import {
   pgTable,
   primaryKey,
+  text,
   timestamp,
   uniqueIndex,
   uuid,
@@ -29,6 +30,24 @@ export const users = pgTable(
     return {
       cpk: primaryKey(users.email, users.applicatonId),
       idIndex: uniqueIndex("users_id_index").on(users.id),
+    };
+  }
+);
+
+export const roles = pgTable(
+  "roles",
+  {
+    id: uuid("id").defaultRandom().notNull(),
+    name: varchar("name", { length: 256 }).notNull(),
+    applicatonId: uuid("applicationId").references(() => applicaton.id),
+    permissions: text("permissions").array().$type<Array<string>>(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("update_at").defaultNow().notNull(),
+  },
+  (roles) => {
+    return {
+      cpk: primaryKey(roles.name, roles.applicatonId),
+      idIndex: uniqueIndex("roles_id_index").on(roles.id),
     };
   }
 );

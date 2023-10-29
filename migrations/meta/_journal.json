@@ -15,6 +15,13 @@
       "when": 1698620799045,
       "tag": "0001_jittery_the_stranger",
       "breakpoints": false
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1698621098394,
+      "tag": "0002_nebulous_spacker_dave",
+      "breakpoints": false
     }
   ]
 }
