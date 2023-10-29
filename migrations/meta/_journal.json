@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1698618812745,
-      "tag": "0000_simple_cyclops",
-      "breakpoints": false
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1698620799045,
-      "tag": "0001_jittery_the_stranger",
-      "breakpoints": false
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1698621098394,
-      "tag": "0002_nebulous_spacker_dave",
-      "breakpoints": false
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1698621541783,
-      "tag": "0003_ancient_pestilence",
+      "when": 1698621781705,
+      "tag": "0000_stale_echo",
       "breakpoints": false
     }
   ]
