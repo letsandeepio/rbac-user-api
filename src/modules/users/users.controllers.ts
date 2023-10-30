@@ -89,12 +89,12 @@ export async function loginHandler(
     });
   }
 
-  return { user };
-
   const token = jwt.sign(
     {
+      id: user.id,
       email,
       applicationId,
+      scopes: user.permissions,
     },
     "secret"
   ); // change this secret or signing method
