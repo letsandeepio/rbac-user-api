@@ -7,6 +7,7 @@ import {
   createUser,
   getUsersByApplication,
 } from "./users.services";
+import { logger } from "../../utils/logger";
 
 export async function createUserHandler(
   request: FastifyRequest<{
@@ -16,9 +17,17 @@ export async function createUserHandler(
 ) {
   const { initialUser, ...data } = request.body;
 
+  logger.debug(request.body);
+
   const roleName = initialUser
     ? SYSTEM_ROLES.SUPER_ADMIN
     : SYSTEM_ROLES.APPLICATION_USER;
+
+  logger.debug(roleName);
+
+  // TODO: If this the first user being created set the role to Super-Admin
+  // Right now we always have to send "initialUser" to true, when sending
+  // the request for first user
 
   if (roleName === SYSTEM_ROLES.SUPER_ADMIN) {
     const appUsers = await getUsersByApplication(data.applicationId);
@@ -32,30 +41,32 @@ export async function createUserHandler(
         },
       });
     }
+  }
 
-    const role = await getRoleByName({
-      name: roleName,
-      applicationId: data.applicationId,
+  const role = await getRoleByName({
+    name: roleName,
+    applicationId: data.applicationId,
+  });
+
+  if (!role) {
+    return reply.code(404).send({
+      message: "Role not found",
+    });
+  }
+
+  try {
+    const user = await createUser(data);
+
+    // assign role to the user
+
+    await assignRoleToUser({
+      userId: user.id,
+      applicatonId: data.applicationId,
+      roleId: role.id,
     });
 
-    if (!role) {
-      return reply.code(404).send({
-        message: "Role not found",
-      });
-    }
-
-    try {
-      const user = await createUser(data);
-
-      // assign role to the user
-
-      await assignRoleToUser({
-        userId: user.id,
-        applicatonId: data.applicationId,
-        roleId: role.id,
-      });
-
-      return user;
-    } catch (ex) {}
+    return user;
+  } catch (ex: any) {
+    logger.debug(ex.message);
   }
 }
