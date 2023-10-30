@@ -6,7 +6,7 @@ import {
 } from "../../config/permissions";
 import { createRole } from "../roles/roles.service";
 import { CreateApplicationBody } from "./applications.schemas";
-import { createApplication } from "./applications.services";
+import { createApplication, getApplications } from "./applications.services";
 
 export async function createApplicationHandler(
   request: FastifyRequest<{ Body: CreateApplicationBody }>,
@@ -41,9 +41,15 @@ export async function createApplicationHandler(
     throw new Error("Error creating application user role");
   }
 
+  reply.code(201).header("Location", `applications/${application.id}`);
+
   return {
     application,
     superAdminRole: superAdminRole.value,
     applicationUserRole: applicationUserRole.value,
   };
+}
+
+export async function getApplicationshandler() {
+  return getApplications();
 }
