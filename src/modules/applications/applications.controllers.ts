@@ -16,21 +16,34 @@ export async function createApplicationHandler(
 
   const application = await createApplication({ name });
 
-  const superAdminRole = await createRole({
+  const superAdminRolePromise = createRole({
     applicationId: application.id,
     name: SYSTEM_ROLES.SUPER_ADMIN,
     permissions: ALL_PERMISSIONS as unknown as Array<string>,
   });
 
-  const applicationUserRole = await createRole({
+  const applicationUserRolePromise = createRole({
     applicationId: application.id,
     name: SYSTEM_ROLES.APPLICATION_USER,
     permissions: USER_ROLE_PERMISSIONS,
   });
 
+  const [superAdminRole, applicationUserRole] = await Promise.allSettled([
+    superAdminRolePromise,
+    applicationUserRolePromise,
+  ]);
+
+  if (superAdminRole.status === "rejected") {
+    throw new Error("Error creating super admin role");
+  }
+
+  if (applicationUserRole.status === "rejected") {
+    throw new Error("Error creating application user role");
+  }
+
   return {
     application,
-    superAdminRole,
-    applicationUserRole,
+    superAdminRole: superAdminRole.value,
+    applicationUserRole: applicationUserRole.value,
   };
 }
