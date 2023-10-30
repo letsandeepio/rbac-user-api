@@ -35,7 +35,6 @@ export const loginBodyJsonSchema = {
 const assignRoleToUserSchema = z.object({
   userId: z.string().uuid(),
   roleId: z.string().uuid(),
-  applicationId: z.string().uuid(),
 });
 
 export type AssignRoleToUserBody = z.infer<typeof assignRoleToUserSchema>;
