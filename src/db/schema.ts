@@ -55,7 +55,7 @@ export const roles = pgTable(
 export const userToRoles = pgTable(
   "userToRoles",
   {
-    applicatonId: uuid("applicationId")
+    applicationId: uuid("applicationId")
       .references(() => applicatons.id)
       .notNull(),
 
@@ -70,7 +70,7 @@ export const userToRoles = pgTable(
   (_userToRoles) => {
     return {
       cpk: primaryKey(
-        _userToRoles.applicatonId,
+        _userToRoles.applicationId,
         _userToRoles.roleId,
         _userToRoles.userId
       ),
