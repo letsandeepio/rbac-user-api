@@ -9,7 +9,7 @@ const createUserBodySchema = z.object({
   initialUser: z.boolean().optional(),
 });
 
-export type CreateUserSchema = z.infer<typeof createUserBodySchema>;
+export type CreateUserBody = z.infer<typeof createUserBodySchema>;
 
 export const createUserJsonSchema = {
   body: zodToJsonSchema(createUserBodySchema, "createUserBodySchema"),
