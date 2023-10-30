@@ -1,23 +1,17 @@
-import { InferInsertModel } from "drizzle-orm";
-import { db } from "../../db";
-import { applicatons } from "../../db/schema";
+import { z } from "zod";
+import zodToJsonSchema from "zod-to-json-schema";
 
-export async function createApplication(
-  data: InferInsertModel<typeof applicatons>
-) {
-  const result = await db.insert(applicatons).values(data).returning();
+const createApplicationBodySchema = z.object({
+  name: z.string({
+    required_error: "Name is required",
+  }),
+});
 
-  return result[0];
-}
+export type CreateApplicationBody = z.infer<typeof createApplicationBodySchema>;
 
-export async function getApplications() {
-  const result = await db
-    .select({
-      id: applicatons.id,
-      name: applicatons.name,
-      createdAt: applicatons.createdAt,
-    })
-    .from(applicatons);
-
-  return result;
-}
+export const createApplicationJsonSchema = {
+  body: zodToJsonSchema(
+    createApplicationBodySchema,
+    "createApplicationBodySchema"
+  ),
+};
